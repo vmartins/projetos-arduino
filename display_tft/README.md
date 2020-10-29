@@ -29,4 +29,4 @@ SD_CLK  | Clock
 SD_MISO | Data output MISO
 
 ## Bibliotecas
-- **[Adafruit ST7735 and ST7789 Library](https://github.com/adafruit/Adafruit-ST7735-Library)** by **Adafruit** ([Documentação](wiki/Adafruit-ST7735-and-ST7789-Library-by-Adafruit))
+- **[Adafruit ST7735 and ST7789 Library](https://github.com/adafruit/Adafruit-ST7735-Library)** by **Adafruit** ([Documentação](../../../wiki/Adafruit-ST7735-and-ST7789-Library-by-Adafruit))
