@@ -28,5 +28,16 @@ SD_MOSI | Data input MOSI
 SD_CLK  | Clock
 SD_MISO | Data output MISO
 
+## Conexão
+Módulo | Arduino
+------- | ---------
+VCC     | 5V
+GND     | GND
+CLK     | D5
+SDA     | D7
+RS      | D4
+RST     | D3
+CS      | D2
+
 ## Bibliotecas
 - **[Adafruit ST7735 and ST7789 Library](https://github.com/adafruit/Adafruit-ST7735-Library)** by **Adafruit** ([Documentação](../../../wiki/Adafruit-ST7735-and-ST7789-Library-by-Adafruit))
