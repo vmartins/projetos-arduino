@@ -6,16 +6,17 @@
 
 Pino | Descrição
 ---- | ---------
-+    | 3.3V~5V
+```+```    | 3.3V~5V
 OUT  | Serial data
--    | Ground
+```-```    | Ground
 
 ## Conexão
+
 Módulo | Arduino
 ------ | ---------
-+      | 5V
+```+```      | 5V
 OUT    | D7
--      | GND
+```-```      | GND
 
 ## Bibliotecas
 - **[DHT sensor library](https://github.com/adafruit/DHT-sensor-library)** by **Adafruit** ([Documentação](../../../wiki/DHT-sensor-library-by-Adafruit))
