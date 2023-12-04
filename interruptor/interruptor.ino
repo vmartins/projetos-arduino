@@ -7,7 +7,6 @@
 
 const char* ssid = "WIFI_NOME";
 const char* password = "WIFI_SENHA";
-MDNSResponder mdns;
 
 ESP8266WebServer server(80);
 
@@ -58,51 +57,87 @@ void handleNotFound() {
   server.send(404, "text/plain", message);
 }
 
+void WiFiEvent(WiFiEvent_t event) {
+    switch(event) {
+        case WIFI_EVENT_STAMODE_CONNECTED:
+          digitalWrite(ESP01_LED_BUILTIN, LOW); // led on
+          break;
+
+        case WIFI_EVENT_STAMODE_AUTHMODE_CHANGE:
+          break;
+
+        case WIFI_EVENT_STAMODE_GOT_IP:
+            Serial.println();
+            Serial.print("Conectado em: ");
+            Serial.println(ssid);
+            
+            Serial.print("Endereço IP: ");
+            Serial.println(WiFi.localIP().toString());
+
+            break;
+            
+        case WIFI_EVENT_STAMODE_DISCONNECTED:
+            digitalWrite(ESP01_LED_BUILTIN, HIGH); // led off
+            Serial.println("Desconectado!");
+            break;
+
+        default:
+          Serial.printf("[WiFi-event] event: %d\n", event);
+          break;
+    }
+}
+
 void setup(void) {
   Serial.begin(115200);
 
   pinMode(ESP01_LED_BUILTIN, OUTPUT);
   digitalWrite(ESP01_LED_BUILTIN, HIGH); // led off
 
+  Serial.println();
+  Serial.println();
+  Serial.println();
+
+  for (uint8_t t = 4; t > 0; t--) {
+    Serial.printf("[SETUP] Aguarde %d...\n", t);
+    Serial.flush();
+    delay(1000);
+  }
+  
   Serial.println("");
   Serial.print("Conectando ao wifi (");
   Serial.print(ssid);
   Serial.print("): ");
 
-  delay(500);
-
   WiFi.mode(WIFI_STA);
+  WiFi.onEvent(WiFiEvent);
   WiFi.begin(ssid, password);
-  Serial.println("");
   
   // Aguardando conexão
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(ESP01_LED_BUILTIN, LOW); // led on
-    delay(500);
     Serial.print(".");
+    delay(500);
     digitalWrite(ESP01_LED_BUILTIN, HIGH); // led off
   }
 
-  digitalWrite(ESP01_LED_BUILTIN, LOW); // led on
   Serial.println("");
-  Serial.print("Conectado em: ");
-  Serial.println(ssid);
-  Serial.print("Endereço IP: ");
-  Serial.println(WiFi.localIP().toString());
-
-  if (mdns.begin("esp8266", WiFi.localIP())) {
-    Serial.println("MDNS responder started");
+  WiFi.setAutoReconnect(true);
+  WiFi.persistent(true);
+  
+  if (MDNS.begin("esp8266", WiFi.localIP())) {
+    Serial.println("mDNS iniciado [hostname=esp8266.local]");
+    MDNS.addService("http", "tcp", 80);
   }
 
   server.on("/", handleRoot);
   server.on("/toggle", handleToggle);
   server.onNotFound(handleNotFound);
-
   server.begin();
   Serial.println("Servidor HTTP iniciado!");
+  digitalWrite(ESP01_LED_BUILTIN, LOW); // led on
 }
 
 void loop(void) {
   server.handleClient();
-  mdns.update();
+  MDNS.update();
 }
